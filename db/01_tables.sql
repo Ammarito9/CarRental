@@ -1,5 +1,5 @@
 
-CREATE TABLE public."Person" (
+CREATE TABLE public."Persons" (
     "PersonID" SERIAL,
     "NationalID" CHAR(11),
     "FirstName" VARCHAR(20),
@@ -47,7 +47,7 @@ CREATE TABLE public."RentalContracts" (
 CREATE TABLE public."PenaltyTypes" (
     "PenaltyTypeID" SERIAL,
     "TypeName" VARCHAR(50),
-    "Discription" TEXT
+    "Description" TEXT
 );
 
 CREATE TABLE public."Penalties" (
