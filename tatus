@@ -1,0 +1,8 @@
+[33mb5b7b00[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m Added EF models and DbContext
+[33m0a1b585[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m add asp.net project set up
+[33m3db3c62[m add database entity relation diagram
+[33m3586a74[m add database textual relational schema
+[33mc2ac6bd[m add project business rules
+[33md285ab6[m add database constraints (02_constraints)
+[33m4f72cfd[m add initial database table definitions (01_tables)
+[33mef359e3[m Initial commit
