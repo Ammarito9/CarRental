@@ -1,9 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 using CarRental.Data;
 using CarRental.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CarRental.Controllers
 {
+  [Authorize(Roles = "Admin")]
   public class LicensesController : Controller
   {
     private readonly CarRentalDbContext _context;

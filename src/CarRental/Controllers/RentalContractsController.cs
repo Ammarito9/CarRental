@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using CarRental.Data;
 using CarRental.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CarRental.Controllers
 {
@@ -54,6 +55,7 @@ namespace CarRental.Controllers
         // POST: RentalContracts/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public IActionResult Create(RentalContract rental)
         {
             if (ModelState.IsValid)
@@ -97,6 +99,12 @@ namespace CarRental.Controllers
         {
             if (id != rental.ContractId)   // adjust ContractId if different
                 return NotFound();
+
+            int days = rental.EndingDate.Value.DayNumber
+                - rental.StartingDate.Value.DayNumber;
+
+            if (days > 30 && !User.IsInRole("Admin"))
+                ModelState.AddModelError("", "Rentals longer than 30 days must be created/approved by an Admin.");
 
             if (ModelState.IsValid)
             {

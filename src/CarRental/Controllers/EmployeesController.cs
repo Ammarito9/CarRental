@@ -2,9 +2,11 @@ using Microsoft.AspNetCore.Mvc;
 using CarRental.Data;
 using CarRental.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CarRental.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class EmployeesController : Controller
     {
         private readonly CarRentalDbContext _context;
