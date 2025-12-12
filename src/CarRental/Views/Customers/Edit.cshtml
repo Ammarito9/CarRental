@@ -1,0 +1,81 @@
+@model CarRental.Models.Customer
+
+@{
+    ViewData["Title"] = "Edit Customer";
+}
+
+<h2>Edit Customer</h2>
+
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="PersonId" />
+
+    <h5 class="mt-3">Person Information</h5>
+    <hr />
+
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label class="form-label">National ID</label>
+            <input name="Person.NationalId" value="@Model.Person?.NationalId" class="form-control" />
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label class="form-label">Gender</label>
+            <select name="Person.Gender" class="form-select">
+                <option value="">-- Select --</option>
+                <option value="M" selected="@(Model.Person?.Gender == 'M')">M</option>
+                <option value="F" selected="@(Model.Person?.Gender == 'F')">F</option>
+            </select>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label class="form-label">First Name</label>
+            <input name="Person.FirstName" value="@Model.Person?.FirstName" class="form-control" />
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label class="form-label">Last Name</label>
+            <input name="Person.LastName" value="@Model.Person?.LastName" class="form-control" />
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label class="form-label">Age</label>
+            <input name="Person.Age" value="@Model.Person?.Age" class="form-control" />
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label class="form-label">Date of Birth</label>
+            <input name="Person.DateOfBirth" type="date" value="@(Model.Person?.DateOfBirth.ToString())" class="form-control" />
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label class="form-label">Phone</label>
+            <input name="Person.PhoneNumber" value="@Model.Person?.PhoneNumber" class="form-control" />
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label class="form-label">Email</label>
+            <input name="Person.Email" value="@Model.Person?.Email" class="form-control" />
+        </div>
+
+        <div class="col-md-12 mb-3">
+            <label class="form-label">Address</label>
+            <input name="Person.Address" value="@Model.Person?.Address" class="form-control" />
+        </div>
+    </div>
+
+    <h5 class="mt-4">Customer Information</h5>
+    <hr />
+
+    <div class="mb-3">
+        <label asp-for="LicenceNumberId" class="form-label">License ID (Optional)</label>
+        <input asp-for="LicenceNumberId" class="form-control" />
+        <span asp-validation-for="LicenceNumberId" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Update</button>
+    <a asp-action="Index" class="btn btn-secondary ms-2">Cancel</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

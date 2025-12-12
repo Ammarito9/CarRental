@@ -1,0 +1,34 @@
+@model CarRental.Models.Payment
+
+@{
+    ViewData["Title"] = "Payment Details";
+}
+
+<h2>Payment Details</h2>
+
+<div class="card mt-3">
+    <div class="card-body">
+        <dl class="row">
+            <dt class="col-sm-3">Payment ID</dt>
+            <dd class="col-sm-9">@Model.PaymentId</dd>
+
+            <dt class="col-sm-3">Total Price</dt>
+            <dd class="col-sm-9">@Model.TotalPrice</dd>
+
+            <dt class="col-sm-3">Paid Price</dt>
+            <dd class="col-sm-9">@Model.PaidPrice</dd>
+
+            <dt class="col-sm-3">Payment Type</dt>
+            <dd class="col-sm-9">@Model.PaymentType</dd>
+
+            <dt class="col-sm-3">Discount ID</dt>
+            <dd class="col-sm-9">@Model.DiscountId</dd>
+
+            <dt class="col-sm-3">Issued By</dt>
+            <dd class="col-sm-9">@Model.IssuedBy</dd>
+        </dl>
+
+        <a asp-action="Edit" asp-route-id="@Model.PaymentId" class="btn btn-primary">Edit</a>
+        <a asp-action="Index" class="btn btn-secondary ms-2">Back</a>
+    </div>
+</div>

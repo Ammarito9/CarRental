@@ -1,0 +1,56 @@
+@model CarRental.Models.Employee
+
+@{
+    ViewData["Title"] = "Create Employee";
+}
+
+<h2>Create Employee</h2>
+
+<div class="alert alert-info">
+    Note: <b>PersonId must already exist</b> in the Person table (Employee has 1-1 relation with Person).
+</div>
+
+<form asp-action="Create" method="post">
+    <div class="mb-3">
+        <label asp-for="PersonId" class="form-label"></label>
+        <input asp-for="PersonId" class="form-control" />
+        <span asp-validation-for="PersonId" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Salary" class="form-label"></label>
+        <input asp-for="Salary" class="form-control" />
+        <span asp-validation-for="Salary" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Permissions" class="form-label"></label>
+        <input asp-for="Permissions" class="form-control" />
+        <span asp-validation-for="Permissions" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="JobStartingDate" class="form-label"></label>
+        <input asp-for="JobStartingDate" type="date" class="form-control" />
+        <span asp-validation-for="JobStartingDate" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="JobEndingDate" class="form-label"></label>
+        <input asp-for="JobEndingDate" type="date" class="form-control" />
+        <span asp-validation-for="JobEndingDate" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="ManagerId" class="form-label"></label>
+        <input asp-for="ManagerId" class="form-control" />
+        <span asp-validation-for="ManagerId" class="text-danger"></span>
+    </div>
+
+    <button class="btn btn-success" type="submit">Save</button>
+    <a asp-action="Index" class="btn btn-secondary ms-2">Cancel</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

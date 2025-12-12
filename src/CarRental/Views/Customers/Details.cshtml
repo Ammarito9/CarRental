@@ -1,0 +1,47 @@
+@model CarRental.Models.Customer
+
+@{
+    ViewData["Title"] = "Customer Details";
+}
+
+<h2>Customer Details</h2>
+
+<div class="card mt-3">
+    <div class="card-body">
+        <h5 class="card-title">
+            @(Model.Person?.FirstName) @(Model.Person?.LastName)
+        </h5>
+
+        <dl class="row mt-3">
+            <dt class="col-sm-3">Person ID</dt>
+            <dd class="col-sm-9">@Model.PersonId</dd>
+
+            <dt class="col-sm-3">National ID</dt>
+            <dd class="col-sm-9">@Model.Person?.NationalId</dd>
+
+            <dt class="col-sm-3">Age</dt>
+            <dd class="col-sm-9">@Model.Person?.Age</dd>
+
+            <dt class="col-sm-3">Gender</dt>
+            <dd class="col-sm-9">@Model.Person?.Gender</dd>
+
+            <dt class="col-sm-3">Phone</dt>
+            <dd class="col-sm-9">@Model.Person?.PhoneNumber</dd>
+
+            <dt class="col-sm-3">Email</dt>
+            <dd class="col-sm-9">@Model.Person?.Email</dd>
+
+            <dt class="col-sm-3">Address</dt>
+            <dd class="col-sm-9">@Model.Person?.Address</dd>
+
+            <dt class="col-sm-3">Date of Birth</dt>
+            <dd class="col-sm-9">@Model.Person?.DateOfBirth</dd>
+
+            <dt class="col-sm-3">License ID</dt>
+            <dd class="col-sm-9">@Model.LicenceNumberId</dd>
+        </dl>
+
+        <a asp-action="Edit" asp-route-id="@Model.PersonId" class="btn btn-primary">Edit</a>
+        <a asp-action="Index" class="btn btn-secondary ms-2">Back</a>
+    </div>
+</div>
