@@ -1,0 +1,52 @@
+@model CarRental.Models.Payment
+
+@{
+    ViewData["Title"] = "Create Payment";
+}
+
+<h2>Create Payment</h2>
+
+<form asp-action="Create" method="post">
+    <div class="mb-3">
+        <label asp-for="DiscountId" class="form-label"></label>
+        <input asp-for="DiscountId" class="form-control" />
+        <span asp-validation-for="DiscountId" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="PaymentType" class="form-label">Payment Method</label>
+        <select asp-for="PaymentType" class="form-select">
+            <option value="">-- Select --</option>
+            <option value="1">Cash</option>
+            <option value="2">Card</option>
+            <option value="3">Transfer</option>
+        </select>
+        <span asp-validation-for="PaymentType" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="TotalPrice" class="form-label"></label>
+        <input asp-for="TotalPrice" class="form-control" />
+        <span asp-validation-for="TotalPrice" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="PaidPrice" class="form-label"></label>
+        <input asp-for="PaidPrice" class="form-control" />
+        <span asp-validation-for="PaidPrice" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="IssuedBy" class="form-label"></label>
+        <input asp-for="IssuedBy" class="form-control" />
+        <span asp-validation-for="IssuedBy" class="text-danger"></span>
+        <small class="text-muted">Employee PersonId (issuer).</small>
+    </div>
+
+    <button class="btn btn-success" type="submit">Save</button>
+    <a asp-action="Index" class="btn btn-secondary ms-2">Cancel</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,67 @@
+@model CarRental.Models.CarsCatalog
+
+@{
+    ViewData["Title"] = "Edit Car";
+}
+
+<h2>Edit Car</h2>
+
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="CarId" />
+
+    <div class="mb-3">
+        <label asp-for="CarName" class="form-label"></label>
+        <input asp-for="CarName" class="form-control" />
+        <span asp-validation-for="CarName" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="ModelYear" class="form-label"></label>
+        <input asp-for="ModelYear" class="form-control" />
+        <span asp-validation-for="ModelYear" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="PlateNumber" class="form-label"></label>
+        <input asp-for="PlateNumber" class="form-control" />
+        <span asp-validation-for="PlateNumber" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="CarCategoryId" class="form-label"></label>
+        <input asp-for="CarCategoryId" class="form-control" />
+        <span asp-validation-for="CarCategoryId" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Status" class="form-label"></label>
+        <input asp-for="Status" class="form-control" />
+        <small class="text-muted">Example: 1 = Available, 0 = Not Available</small>
+        <span asp-validation-for="Status" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="FuelType" class="form-label"></label>
+        <input asp-for="FuelType" class="form-control" />
+        <span asp-validation-for="FuelType" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="FuelLevel" class="form-label"></label>
+        <input asp-for="FuelLevel" class="form-control" />
+        <span asp-validation-for="FuelLevel" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="DistanceKm" class="form-label"></label>
+        <input asp-for="DistanceKm" class="form-control" />
+        <span asp-validation-for="DistanceKm" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Update</button>
+    <a asp-action="Index" class="btn btn-secondary ms-2">Cancel</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,41 @@
+@model CarRental.Models.License
+
+@{
+    ViewData["Title"] = "Edit License";
+}
+
+<h2>Edit License</h2>
+
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="LicenceNumberId" />
+
+    <div class="mb-3">
+        <label asp-for="LicenceNumber" class="form-label"></label>
+        <input asp-for="LicenceNumber" class="form-control" />
+        <span asp-validation-for="LicenceNumber" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="StartingDate" class="form-label"></label>
+        <input asp-for="StartingDate" type="date" class="form-control" />
+        <span asp-validation-for="StartingDate" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="EndingDate" class="form-label"></label>
+        <input asp-for="EndingDate" type="date" class="form-control" />
+        <span asp-validation-for="EndingDate" class="text-danger"></span>
+    </div>
+
+    <div class="form-check mb-3">
+        <input asp-for="IsValid" class="form-check-input" />
+        <label asp-for="IsValid" class="form-check-label"></label>
+    </div>
+
+    <button class="btn btn-primary" type="submit">Update</button>
+    <a asp-action="Index" class="btn btn-secondary ms-2">Cancel</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -5,11 +5,11 @@ using CarRental.Models;
 
 namespace CarRental.Controllers
 {
-    public class CarsController : Controller
+    public class CarsCatalogController : Controller
     {
         private readonly CarRentalDbContext _context;
 
-        public CarsController(CarRentalDbContext context)
+        public CarsCatalogController(CarRentalDbContext context)
         {
             _context = context;
         }

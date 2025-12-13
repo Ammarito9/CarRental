@@ -1,8 +1,112 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Home";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container mt-5">
+
+    <!-- Hero Section -->
+    <div class="text-center mb-5">
+        <h1 class="display-4 fw-bold">Car Rental Management System</h1>
+        <p class="lead mt-3">
+            Manage cars, customers, employees, rentals, and payments easily.
+        </p>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="row g-4">
+
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Cars Catalog</h5>
+                    <p class="card-text">
+                        Browse all available cars with full details.
+                    </p>
+                    <a asp-controller="CarsCatalog"
+                       asp-action="Index"
+                       class="btn btn-primary">
+                        View Cars
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Rental Contracts</h5>
+                    <p class="card-text">
+                        Create and manage rental contracts.
+                    </p>
+                    <a asp-controller="RentalContracts"
+                       asp-action="Index"
+                       class="btn btn-success">
+                        View Rentals
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Payments</h5>
+                    <p class="card-text">
+                        Track and manage customer payments.
+                    </p>
+                    <a asp-controller="Payments"
+                       asp-action="Index"
+                       class="btn btn-warning">
+                        View Payments
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Admin Section -->
+    @if (User.IsInRole("Admin"))
+    {
+        <hr class="my-5" />
+
+        <h3 class="text-center mb-4">Administration</h3>
+
+        <div class="row g-4">
+
+            <div class="col-md-6">
+                <div class="card h-100 shadow-sm border-dark">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Employees</h5>
+                        <p class="card-text">
+                            Manage employee records and permissions.
+                        </p>
+                        <a asp-controller="Employees"
+                           asp-action="Index"
+                           class="btn btn-dark">
+                            Manage Employees
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card h-100 shadow-sm border-secondary">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Licenses</h5>
+                        <p class="card-text">
+                            Manage customer driving licenses.
+                        </p>
+                        <a asp-controller="Licenses"
+                           asp-action="Index"
+                           class="btn btn-secondary">
+                            Manage Licenses
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    }
+
 </div>

@@ -167,11 +167,8 @@ namespace CarRental.Controllers
         private void PopulateDropDowns()
         {
             // Customers dropdown
-            ViewBag.CustomerId = new SelectList(
-                _context.Customers,
-                "CustomerId",   // value
-                "CustomerId"    // text (change to FullName if you add it)
-            );
+            ViewBag.CustomerId = new SelectList(_context.Customers, "PersonId", "PersonId");
+
 
             // Cars dropdown
             ViewBag.CarId = new SelectList(

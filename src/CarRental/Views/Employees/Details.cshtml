@@ -1,0 +1,44 @@
+@model CarRental.Models.Employee
+
+@{
+    ViewData["Title"] = "Employee Details";
+}
+
+<h2>Employee Details</h2>
+
+<div class="card mt-3">
+    <div class="card-body">
+        <h5 class="card-title">
+            @(Model.Person?.FirstName) @(Model.Person?.LastName)
+        </h5>
+
+        <dl class="row mt-3">
+            <dt class="col-sm-3">Person ID</dt>
+            <dd class="col-sm-9">@Model.PersonId</dd>
+
+            <dt class="col-sm-3">Phone</dt>
+            <dd class="col-sm-9">@Model.Person?.PhoneNumber</dd>
+
+            <dt class="col-sm-3">Email</dt>
+            <dd class="col-sm-9">@Model.Person?.Email</dd>
+
+            <dt class="col-sm-3">Salary</dt>
+            <dd class="col-sm-9">@Model.Salary</dd>
+
+            <dt class="col-sm-3">Permissions</dt>
+            <dd class="col-sm-9">@Model.Permissions</dd>
+
+            <dt class="col-sm-3">Job Start</dt>
+            <dd class="col-sm-9">@Model.JobStartingDate</dd>
+
+            <dt class="col-sm-3">Job End</dt>
+            <dd class="col-sm-9">@Model.JobEndingDate</dd>
+
+            <dt class="col-sm-3">Manager ID</dt>
+            <dd class="col-sm-9">@Model.ManagerId</dd>
+        </dl>
+
+        <a asp-action="Edit" asp-route-id="@Model.PersonId" class="btn btn-primary">Edit</a>
+        <a asp-action="Index" class="btn btn-secondary ms-2">Back</a>
+    </div>
+</div>

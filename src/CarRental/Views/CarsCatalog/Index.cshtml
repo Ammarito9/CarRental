@@ -1,0 +1,47 @@
+@model IEnumerable<CarRental.Models.CarsCatalog>
+
+@{
+    ViewData["Title"] = "Cars Catalog";
+}
+
+<h2 class="mb-3">Cars Catalog</h2>
+
+<a asp-action="Create" class="btn btn-success mb-3">Add New Car</a>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Car Name</th>
+            <th>Model Year</th>
+            <th>Plate</th>
+            <th>Category</th>
+            <th>Status</th>
+            <th>Fuel</th>
+            <th>Distance (KM)</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var car in Model)
+{
+        <tr>
+            <td>@car.CarName</td>
+            <td>@car.ModelYear</td>
+            <td>@car.PlateNumber</td>
+            <td>@car.CarCategory?.CategoryName</td>
+            <td>
+                <span class="badge @(car.Status == 1 ? "bg-success" : "bg-danger")">
+                    @(car.Status == 1 ? "Available" : "Not Available")
+                </span>
+            </td>
+            <td>@car.FuelLevel%</td>
+            <td>@car.DistanceKm</td>
+            <td>
+                <a asp-action="Details" asp-route-id="@car.CarId">Details</a> |
+                <a asp-action="Edit" asp-route-id="@car.CarId">Edit</a> |
+                <a asp-action="Delete" asp-route-id="@car.CarId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

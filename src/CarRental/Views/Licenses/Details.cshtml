@@ -1,0 +1,31 @@
+@model CarRental.Models.License
+
+@{
+    ViewData["Title"] = "License Details";
+}
+
+<h2>License Details</h2>
+
+<div class="card mt-3">
+    <div class="card-body">
+        <dl class="row">
+            <dt class="col-sm-3">ID</dt>
+            <dd class="col-sm-9">@Model.LicenceNumberId</dd>
+
+            <dt class="col-sm-3">License Number</dt>
+            <dd class="col-sm-9">@Model.LicenceNumber</dd>
+
+            <dt class="col-sm-3">Starting Date</dt>
+            <dd class="col-sm-9">@Model.StartingDate</dd>
+
+            <dt class="col-sm-3">Ending Date</dt>
+            <dd class="col-sm-9">@Model.EndingDate</dd>
+
+            <dt class="col-sm-3">Valid</dt>
+            <dd class="col-sm-9">@(Model.IsValid == true ? "Yes" : "No")</dd>
+        </dl>
+
+        <a asp-action="Edit" asp-route-id="@Model.LicenceNumberId" class="btn btn-primary">Edit</a>
+        <a asp-action="Index" class="btn btn-secondary ms-2">Back</a>
+    </div>
+</div>

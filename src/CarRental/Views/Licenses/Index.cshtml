@@ -1,0 +1,39 @@
+@model IEnumerable<CarRental.Models.License>
+
+@{
+    ViewData["Title"] = "Licenses";
+}
+
+<h2 class="mb-3">Licenses</h2>
+
+<a asp-action="Create" class="btn btn-success mb-3">Add License</a>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>License Number</th>
+            <th>Start</th>
+            <th>End</th>
+            <th>Valid</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var l in Model)
+{
+        <tr>
+            <td>@l.LicenceNumberId</td>
+            <td>@l.LicenceNumber</td>
+            <td>@l.StartingDate</td>
+            <td>@l.EndingDate</td>
+            <td>@(l.IsValid == true ? "Yes" : "No")</td>
+            <td>
+                <a asp-action="Details" asp-route-id="@l.LicenceNumberId">Details</a> |
+                <a asp-action="Edit" asp-route-id="@l.LicenceNumberId">Edit</a> |
+                <a asp-action="Delete" asp-route-id="@l.LicenceNumberId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

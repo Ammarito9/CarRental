@@ -12,7 +12,7 @@ builder.Services.AddDbContext<CarRentalDbContext>(options =>
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(
     options => 
     {
-        options.LoginPath = "Account/Login";
+        options.LoginPath = "/Account/Login";
         options.AccessDeniedPath = "/Account/AccessDenied";
     }
 );
