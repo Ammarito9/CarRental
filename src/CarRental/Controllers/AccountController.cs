@@ -56,6 +56,43 @@ namespace CarRental.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        [HttpGet]
+        public IActionResult Register()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Register(RegisterViewModel model)
+        {
+            if (!ModelState.IsValid)
+                return View(model);
+
+            if (model.Password != model.ConfirmPassword)
+            {
+                ModelState.AddModelError("", "Passwords do not match.");
+                return View(model);
+            }
+
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, model.Username),
+                new Claim(ClaimTypes.Role, "Employee")
+            };
+
+            var identity = new ClaimsIdentity(
+                claims,
+                CookieAuthenticationDefaults.AuthenticationScheme);
+
+            var principal = new ClaimsPrincipal(identity);
+
+            HttpContext.SignInAsync(
+                CookieAuthenticationDefaults.AuthenticationScheme,
+                principal).GetAwaiter().GetResult();
+
+            return RedirectToAction("Index", "Home");
+        }
+
         [HttpPost]
         public IActionResult Logout()
         {
