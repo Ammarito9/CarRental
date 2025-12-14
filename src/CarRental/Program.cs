@@ -13,6 +13,13 @@ builder.Services.AddDbContext<CarRentalDbContext>(options =>
 builder.Services.AddDbContext<CarRentalIdentityDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("CarRentalIdentityDb")));
 
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/Account/Login";
+    options.AccessDeniedPath = "/Account/AccessDenied";
+});
+
+
 builder.Services.AddIdentity<IdentityUser, IdentityRole>()
     .AddEntityFrameworkStores<CarRentalIdentityDbContext>()
     .AddDefaultTokenProviders();
