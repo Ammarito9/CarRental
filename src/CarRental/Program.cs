@@ -33,5 +33,6 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
 
+CarRental.Data.SeedIdentityData.EnsurePopulated(app);
 
 app.Run();
