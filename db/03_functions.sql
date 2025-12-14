@@ -52,26 +52,24 @@ LANGUAGE "plpgsql";
 -- Function:3
 --------------
 
-CREATE OR REPLACE FUNCTION "fn_get_person_fullname"(
-    p_person_id INT
-)
-RETURNS TEXT
-AS
-$$
+CREATE OR REPLACE FUNCTION fn_get_person_fullname(p_person_id integer)
+RETURNS text
+LANGUAGE plpgsql
+AS $$
 DECLARE
-    v_fullname TEXT;
+    v_name text;
 BEGIN
     SELECT per."FirstName" || ' ' || per."LastName"
-    INTO v_fullname
+    INTO v_name
     FROM "Customers" cust
-    INNER JOIN "Person" per 
-        ON per."NationalID" = cust."PersonID"
+    INNER JOIN "Person" per
+        ON per."PersonID" = cust."PersonID"
     WHERE cust."PersonID" = p_person_id;
 
-    RETURN v_fullname;
+    RETURN v_name;
 END;
-$$
-LANGUAGE "plpgsql";
+$$;
+
 -----------------------------------------------------------------------------------
 --------------
 -- Function:4

@@ -8,51 +8,72 @@
     <link rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" />
 </head>
+
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
-            <a class="navbar-brand" asp-controller="Home" asp-action="Index">
-                Car Rental
-            </a>
 
-            <div class="collapse navbar-collapse">
-                <ul class="navbar-nav me-auto">
+            <a class="navbar-brand" asp-controller="Home" asp-action="Index">Car Rental</a>
+
+            <!-- ✅ Mobile toggler -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar"
+                    aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- ✅ Correct collapse target -->
+            <div class="collapse navbar-collapse" id="mainNavbar">
+
+                <!-- Left side links -->
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
 
                     <li class="nav-item">
-                        <a class="nav-link" asp-controller="CarsCatalog" asp-action="Index">
-                            Cars Catalog
-                        </a>
+                        <a class="nav-link" asp-controller="Home" asp-action="Index">Home</a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" asp-controller="Customers" asp-action="Index">
-                            Customers
-                        </a>
+                        <a class="nav-link" asp-controller="CarsCatalog" asp-action="Index">Cars Catalog</a>
+                    </li>
+
+                    <!-- These pages exist in your zip -->
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Customers" asp-action="Index">Customers</a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" asp-controller="RentalContracts" asp-action="Index">
-                            Rental Contracts
-                        </a>
+                        <a class="nav-link" asp-controller="RentalContracts" asp-action="Index">Rental Contracts</a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" asp-controller="Payments" asp-action="Index">
-                            Payments
-                        </a>
+                        <a class="nav-link" asp-controller="Payments" asp-action="Index">Payments</a>
                     </li>
 
+                    <!-- ✅ Admin dropdown (matches EmployeesController + LicensesController in your zip) -->
                     @if (User.IsInRole("Admin"))
                     {
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="Employees" asp-action="Index">
-                                Employees
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button"
+                               data-bs-toggle="dropdown" aria-expanded="false">
+                                Admin
                             </a>
+                            <ul class="dropdown-menu" aria-labelledby="adminDropdown">
+                                <li>
+                                    <a class="dropdown-item" asp-controller="Employees" asp-action="Index">Employees</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" asp-controller="Licenses" asp-action="Index">Licenses</a>
+                                </li>
+                            </ul>
                         </li>
                     }
+
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                    </li>
                 </ul>
 
-                <ul class="navbar-nav">
+                <!-- Right side auth -->
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                     @if (User.Identity != null && User.Identity.IsAuthenticated)
                     {
                         <li class="nav-item">
@@ -62,12 +83,9 @@
                         </li>
 
                         <li class="nav-item">
-                            <form asp-controller="Account"
-                                  asp-action="Logout"
-                                  method="post"
-                                  class="d-inline">
-                                <button type="submit"
-                                        class="nav-link btn btn-link text-white p-0 m-0">
+                            <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-outline-light btn-sm">
                                     Logout
                                 </button>
                             </form>
@@ -76,18 +94,17 @@
                     else
                     {
                         <li class="nav-item">
-                            <a class="nav-link" asp-controller="Account" asp-action="Login">
-                                Login
-                            </a>
+                            <a class="nav-link" asp-controller="Account" asp-action="Login">Login</a>
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link" asp-controller="Account" asp-action="Register">
+                            <a class="btn btn-primary btn-sm ms-lg-2" asp-controller="Account" asp-action="Register">
                                 Register
                             </a>
                         </li>
                     }
                 </ul>
+
             </div>
         </div>
     </nav>

@@ -57,5 +57,55 @@ namespace CarRental.Controllers
             await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
         }
+
+        [HttpGet]
+        public IActionResult Register(string? returnUrl = null)
+        {
+            ViewData["ReturnUrl"] = returnUrl;
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Register(RegisterViewModel vm, string? returnUrl = null)
+        {
+            ViewData["ReturnUrl"] = returnUrl;
+
+            if (!ModelState.IsValid)
+                return View(vm);
+
+            // Check if username already exists
+            var existingUser = await _userManager.FindByNameAsync(vm.UserName);
+            if (existingUser != null)
+            {
+                ModelState.AddModelError(nameof(vm.UserName), "Username already exists.");
+                return View(vm);
+            }
+
+            var user = new IdentityUser
+            {
+                UserName = vm.UserName
+            };
+
+            var result = await _userManager.CreateAsync(user, vm.Password);
+
+            if (!result.Succeeded)
+            {
+                foreach (var error in result.Errors)
+                    ModelState.AddModelError("", error.Description);
+
+                return View(vm);
+            }
+
+            // Auto login after successful registration
+            await _signInManager.SignInAsync(user, isPersistent: false);
+
+            if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+                return Redirect(returnUrl);
+
+            return RedirectToAction("Index", "Home");
+        }
+
+
+
     }
 }

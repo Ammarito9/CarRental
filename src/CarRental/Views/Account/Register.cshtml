@@ -4,41 +4,96 @@
     ViewData["Title"] = "Register";
 }
 
-<h2>Register</h2>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-sm-10 col-md-7 col-lg-5">
 
-<form asp-action="Register" method="post">
-    <div>
-        <label asp-for="UserName"></label>
-        <input asp-for="UserName" />
-        <span asp-validation-for="UserName" style="color:red"></span>
+            <div class="card shadow-sm border-0 rounded-4">
+                <div class="card-body p-4 p-md-5">
+
+                    <div class="text-center mb-4">
+                        <h2 class="fw-bold mb-1">Create account</h2>
+                        <p class="text-muted mb-0">Register to start using the system</p>
+                    </div>
+
+                    <form asp-action="Register" method="post">
+                        <input type="hidden" name="returnUrl" value="@ViewData["ReturnUrl"]" />
+
+                        <div asp-validation-summary="All" class="alert alert-danger py-2 mb-3" role="alert"></div>
+
+                        <div class="mb-3">
+                            <label asp-for="UserName" class="form-label fw-semibold"></label>
+                            <input asp-for="UserName" class="form-control form-control-lg" placeholder="Choose a username" autocomplete="username" />
+                            <span asp-validation-for="UserName" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Password" class="form-label fw-semibold"></label>
+                            <div class="input-group input-group-lg">
+                                <input asp-for="Password" type="password" class="form-control" id="passwordInput"
+                                       placeholder="Create a password" autocomplete="new-password" />
+                                <button class="btn btn-outline-secondary" type="button" id="togglePassword">Show</button>
+                            </div>
+                            <span asp-validation-for="Password" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="ConfirmPassword" class="form-label fw-semibold"></label>
+                            <div class="input-group input-group-lg">
+                                <input asp-for="ConfirmPassword" type="password" class="form-control" id="confirmPasswordInput"
+                                       placeholder="Confirm your password" autocomplete="new-password" />
+                                <button class="btn btn-outline-secondary" type="button" id="toggleConfirmPassword">Show</button>
+                            </div>
+                            <span asp-validation-for="ConfirmPassword" class="text-danger small"></span>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-lg w-100 rounded-3">
+                            Register
+                        </button>
+                    </form>
+
+                    <hr class="my-4" />
+
+                    <p class="text-center mb-0">
+                        Already have an account?
+                        <a asp-action="Login" class="fw-semibold text-decoration-none">Login</a>
+                    </p>
+                </div>
+            </div>
+
+            <p class="text-center text-muted mt-3 small mb-0">
+                © @DateTime.Now.Year CarRental
+            </p>
+        </div>
     </div>
+</div>
 
-    <div>
-        <label asp-for="Password"></label>
-        <input asp-for="Password" type="password" />
-        <span asp-validation-for="Password" style="color:red"></span>
-    </div>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
 
-    <div>
-        <label asp-for="ConfirmPassword"></label>
-        <input asp-for="ConfirmPassword" type="password" />
-        <span asp-validation-for="ConfirmPassword" style="color:red"></span>
-    </div>
+    <script>
+        (function () {
+            const pwBtn = document.getElementById("togglePassword");
+            const pwInput = document.getElementById("passwordInput");
 
-    <button type="submit">Register</button>
-</form>
+            const cpwBtn = document.getElementById("toggleConfirmPassword");
+            const cpwInput = document.getElementById("confirmPasswordInput");
 
-@if (!ViewData.ModelState.IsValid)
-{
-    <div style="color:red;">
-        @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
-        {
-            <p>@error.ErrorMessage</p>
-        }
-    </div>
+            if (pwBtn && pwInput) {
+                pwBtn.addEventListener("click", function () {
+                    const isPassword = pwInput.type === "password";
+                    pwInput.type = isPassword ? "text" : "password";
+                    pwBtn.textContent = isPassword ? "Hide" : "Show";
+                });
+            }
+
+            if (cpwBtn && cpwInput) {
+                cpwBtn.addEventListener("click", function () {
+                    const isPassword = cpwInput.type === "password";
+                    cpwInput.type = isPassword ? "text" : "password";
+                    cpwBtn.textContent = isPassword ? "Hide" : "Show";
+                });
+            }
+        })();
+    </script>
 }
-
-<p>
-    Already have an account?
-    <a asp-action="Login">Login</a>
-</p>

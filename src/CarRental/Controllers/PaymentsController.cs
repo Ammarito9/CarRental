@@ -4,9 +4,12 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using CarRental.Data;
 using CarRental.Models;
+using Microsoft.AspNetCore.Authorization;
+
 
 namespace CarRental.Controllers
 {
+    [Authorize]
     public class PaymentsController : Controller
     {
         private readonly CarRentalDbContext _context;

@@ -112,40 +112,26 @@ EXECUTE PROCEDURE "trg_update_car_after_return"();
 ---------------------------------------------------------------------------------------------------------------------------
 
 ------------------------------------------------------------
--- TRIGGER 4: Log customer creation
--- Uses fn_get_person_fullname to write log entries
+
 ------------------------------------------------------------
 
--- Make sure you have this log table:
--- CREATE TABLE "CustomerLogs" (
---     "LogID" SERIAL PRIMARY KEY,
---     "CustomerID" INT NOT NULL,
---     "FullName" TEXT NOT NULL,
---     "LogDate" TIMESTAMP NOT NULL
--- );
 
-CREATE OR REPLACE FUNCTION "trg_log_customer_insert"()
+CREATE OR REPLACE FUNCTION "trg_customer_check_person"()
 RETURNS TRIGGER
-AS
-$$
-DECLARE
-    v_fullname TEXT;
+AS $$
 BEGIN
-    -- Get full name using function
-    v_fullname := "fn_get_person_fullname"(NEW."PersonID");
-
-    -- Insert into log table
-    INSERT INTO "CustomerLogs"
-    ("CustomerID", "FullName", "LogDate")
-    VALUES
-    (NEW."CustomerID", v_fullname, CURRENT_TIMESTAMP);
+    -- Simple business rule check
+    IF NEW."PersonID" IS NULL THEN
+        RAISE EXCEPTION 'Customer must be linked to a Person';
+    END IF;
 
     RETURN NEW;
 END;
-$$
-LANGUAGE "plpgsql";
-
-CREATE TRIGGER "log_customer_insert"
-AFTER INSERT ON "Customers"
+$$ LANGUAGE plpgsql;
+CREATE TRIGGER "check_customer_person"
+BEFORE INSERT ON "Customers"
 FOR EACH ROW
-EXECUTE PROCEDURE "trg_log_customer_insert"();
+EXECUTE PROCEDURE "trg_customer_check_person"();
+
+
+------------------------------------------------------------
