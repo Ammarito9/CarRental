@@ -1,32 +1,33 @@
 --------------
 -- Function:1
 --------------
-CREATE OR REPLACE FUNCTION "fn_car_available"(
-    p_plate_number VARCHAR,
-    p_start_date   DATE,
-    p_end_date     DATE
+CREATE OR REPLACE FUNCTION fn_car_available(
+    p_car_id INT,
+    p_start_date DATE,
+    p_end_date DATE
 )
 RETURNS BOOLEAN
-AS
-$$
+LANGUAGE plpgsql
+AS $$
 DECLARE
     v_count INT;
 BEGIN
     IF p_start_date > p_end_date THEN
-        RAISE EXCEPTION 'Start date (%) cannot be after end date (%)', p_start_date, p_end_date;
+        RAISE EXCEPTION 'Start date cannot be after end date';
     END IF;
 
     SELECT COUNT(*)
     INTO v_count
     FROM "RentalContracts" rc
-    WHERE rc."PlateNumber" = p_plate_number
-      AND NOT (rc."EndingDate" < p_start_date
-           OR  rc."StartingDate" > p_end_date);
+    WHERE rc."CarID" = p_car_id
+      AND NOT (
+          rc."EndingDate" < p_start_date
+          OR rc."StartingDate" > p_end_date
+      );
 
     RETURN v_count = 0;
 END;
-$$
-LANGUAGE "plpgsql";
+$$;
 -----------------------------------------------------------------------------------
 --------------
 -- Function:2

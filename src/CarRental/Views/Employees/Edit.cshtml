@@ -2,41 +2,125 @@
 
 @{
     ViewData["Title"] = "Edit Employee";
+
+    // Safety: avoid null Person breaking bindings
+    if (Model.Person == null)
+    {
+        Model.Person = new CarRental.Models.Person();
+    }
 }
 
 <h2>Edit Employee</h2>
 
-<form asp-action="Edit" method="post">
+<form asp-action="Edit" asp-route-id="@Model.PersonId" method="post">
+    @Html.AntiForgeryToken()
+
+    <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+    <!-- Keys -->
     <input type="hidden" asp-for="PersonId" />
+    <input type="hidden" asp-for="Person.PersonId" />
 
-    <div class="mb-3">
-        <label asp-for="Salary" class="form-label"></label>
-        <input asp-for="Salary" class="form-control" />
-        <span asp-validation-for="Salary" class="text-danger"></span>
+    <h5 class="mt-3">Employee Information</h5>
+    <hr />
+
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label asp-for="Salary" class="form-label"></label>
+            <input asp-for="Salary" class="form-control" />
+            <span asp-validation-for="Salary" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label asp-for="Permissions" class="form-label"></label>
+            <input asp-for="Permissions" class="form-control" />
+            <span asp-validation-for="Permissions" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label asp-for="JobStartingDate" class="form-label"></label>
+            <input asp-for="JobStartingDate" type="date" class="form-control"
+                   value="@(Model.JobStartingDate.HasValue ? Model.JobStartingDate.Value.ToString("yyyy-MM-dd") : "")" />
+            <span asp-validation-for="JobStartingDate" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label asp-for="JobEndingDate" class="form-label"></label>
+            <input asp-for="JobEndingDate" type="date" class="form-control"
+                   value="@(Model.JobEndingDate.HasValue ? Model.JobEndingDate.Value.ToString("yyyy-MM-dd") : "")" />
+            <span asp-validation-for="JobEndingDate" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-12 mb-3">
+            <label asp-for="ManagerId" class="form-label"></label>
+            <input asp-for="ManagerId" class="form-control" />
+            <span asp-validation-for="ManagerId" class="text-danger"></span>
+            <small class="text-muted">Enter a valid Manager PersonId (if applicable).</small>
+        </div>
     </div>
 
-    <div class="mb-3">
-        <label asp-for="Permissions" class="form-label"></label>
-        <input asp-for="Permissions" class="form-control" />
-        <span asp-validation-for="Permissions" class="text-danger"></span>
-    </div>
+    <h5 class="mt-4">Person Information</h5>
+    <hr />
 
-    <div class="mb-3">
-        <label asp-for="JobStartingDate" class="form-label"></label>
-        <input asp-for="JobStartingDate" type="date" class="form-control" />
-        <span asp-validation-for="JobStartingDate" class="text-danger"></span>
-    </div>
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label asp-for="Person.NationalId" class="form-label"></label>
+            <input asp-for="Person.NationalId" class="form-control" />
+            <span asp-validation-for="Person.NationalId" class="text-danger"></span>
+        </div>
 
-    <div class="mb-3">
-        <label asp-for="JobEndingDate" class="form-label"></label>
-        <input asp-for="JobEndingDate" type="date" class="form-control" />
-        <span asp-validation-for="JobEndingDate" class="text-danger"></span>
-    </div>
+        <div class="col-md-6 mb-3">
+            <label asp-for="Person.Gender" class="form-label"></label>
+            <select asp-for="Person.Gender" class="form-select">
+                <option value="">-- Select --</option>
+                <option value="M">M</option>
+                <option value="F">F</option>
+            </select>
+            <span asp-validation-for="Person.Gender" class="text-danger"></span>
+        </div>
 
-    <div class="mb-3">
-        <label asp-for="ManagerId" class="form-label"></label>
-        <input asp-for="ManagerId" class="form-control" />
-        <span asp-validation-for="ManagerId" class="text-danger"></span>
+        <div class="col-md-6 mb-3">
+            <label asp-for="Person.FirstName" class="form-label"></label>
+            <input asp-for="Person.FirstName" class="form-control" />
+            <span asp-validation-for="Person.FirstName" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label asp-for="Person.LastName" class="form-label"></label>
+            <input asp-for="Person.LastName" class="form-control" />
+            <span asp-validation-for="Person.LastName" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label asp-for="Person.Age" class="form-label"></label>
+            <input asp-for="Person.Age" class="form-control" />
+            <span asp-validation-for="Person.Age" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label asp-for="Person.DateOfBirth" class="form-label"></label>
+            <input asp-for="Person.DateOfBirth" type="date" class="form-control"
+                   value="@(Model.Person?.DateOfBirth.HasValue == true ? Model.Person.DateOfBirth.Value.ToString("yyyy-MM-dd") : "")" />
+            <span asp-validation-for="Person.DateOfBirth" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label asp-for="Person.PhoneNumber" class="form-label"></label>
+            <input asp-for="Person.PhoneNumber" class="form-control" />
+            <span asp-validation-for="Person.PhoneNumber" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label asp-for="Person.Email" class="form-label"></label>
+            <input asp-for="Person.Email" class="form-control" />
+            <span asp-validation-for="Person.Email" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-12 mb-3">
+            <label asp-for="Person.Address" class="form-label"></label>
+            <input asp-for="Person.Address" class="form-control" />
+            <span asp-validation-for="Person.Address" class="text-danger"></span>
+        </div>
     </div>
 
     <button class="btn btn-primary" type="submit">Update</button>

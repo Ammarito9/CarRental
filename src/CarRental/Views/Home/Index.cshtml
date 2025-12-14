@@ -2,29 +2,73 @@
     ViewData["Title"] = "Home";
 }
 
-<div class="container mt-5">
+<div class="container py-5">
 
-    <!-- Hero Section -->
-    <div class="text-center mb-5">
-        <h1 class="display-4 fw-bold">Car Rental Management System</h1>
-        <p class="lead mt-3">
-            Manage cars, customers, employees, rentals, and payments easily.
-        </p>
+    <!-- Hero -->
+    <div class="p-4 p-md-5 mb-4 rounded-4 border bg-light shadow-sm">
+        <div class="row align-items-center g-4">
+            <div class="col-lg-8">
+                <h1 class="display-5 fw-bold mb-2">Car Rental Management System</h1>
+                <p class="lead text-muted mb-4">
+                    Manage cars, customers, employees, rentals, and payments in one place — fast and organized.
+                </p>
+
+                <div class="d-flex flex-wrap gap-2">
+                    <a asp-controller="CarsCatalog" asp-action="Index" class="btn btn-primary btn-lg">
+                        Cars Catalog
+                    </a>
+                    <a asp-controller="RentalContracts" asp-action="Index" class="btn btn-success btn-lg">
+                        Rental Contracts
+                    </a>
+                    <a asp-controller="Payments" asp-action="Index" class="btn btn-warning btn-lg text-dark">
+                        Payments
+                    </a>
+                </div>
+
+                <div class="mt-4 text-muted small">
+                    @if (User.Identity != null && User.Identity.IsAuthenticated)
+                    {
+                        <span>Signed in as <strong>@User.Identity.Name</strong></span>
+                    }
+                    else
+                    {
+                        <span>You are browsing as a guest. </span>
+                        <a asp-controller="Account" asp-action="Login">Login</a>
+                        <span> or </span>
+                        <a asp-controller="Account" asp-action="Register">Register</a>
+                        <span> to access all features.</span>
+                    }
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="card border-0 rounded-4 shadow-sm">
+                    <div class="card-body p-4">
+                        <h5 class="fw-semibold mb-3">Quick Tips</h5>
+                        <ul class="text-muted small mb-0">
+                            <li class="mb-2">Add cars to catalog before creating rentals.</li>
+                            <li class="mb-2">Make sure customer has a valid license.</li>
+                            <li>Track payments and discounts per contract.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <!-- Quick Actions -->
+    <!-- Feature Cards -->
     <div class="row g-4">
-
         <div class="col-md-4">
-            <div class="card h-100 shadow-sm">
-                <div class="card-body text-center">
-                    <h5 class="card-title">Cars Catalog</h5>
-                    <p class="card-text">
-                        Browse all available cars with full details.
+            <div class="card h-100 border-0 rounded-4 shadow-sm">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <h5 class="card-title mb-0">Cars Catalog</h5>
+                        <span class="badge bg-primary-subtle text-primary border border-primary-subtle">Cars</span>
+                    </div>
+                    <p class="card-text text-muted">
+                        Browse all cars, check availability, fuel level, distance and details.
                     </p>
-                    <a asp-controller="CarsCatalog"
-                       asp-action="Index"
-                       class="btn btn-primary">
+                    <a asp-controller="CarsCatalog" asp-action="Index" class="btn btn-outline-primary w-100">
                         View Cars
                     </a>
                 </div>
@@ -32,15 +76,16 @@
         </div>
 
         <div class="col-md-4">
-            <div class="card h-100 shadow-sm">
-                <div class="card-body text-center">
-                    <h5 class="card-title">Rental Contracts</h5>
-                    <p class="card-text">
-                        Create and manage rental contracts.
+            <div class="card h-100 border-0 rounded-4 shadow-sm">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <h5 class="card-title mb-0">Rental Contracts</h5>
+                        <span class="badge bg-success-subtle text-success border border-success-subtle">Rentals</span>
+                    </div>
+                    <p class="card-text text-muted">
+                        Create and manage rental contracts, dates, approvals and vehicle assignment.
                     </p>
-                    <a asp-controller="RentalContracts"
-                       asp-action="Index"
-                       class="btn btn-success">
+                    <a asp-controller="RentalContracts" asp-action="Index" class="btn btn-outline-success w-100">
                         View Rentals
                     </a>
                 </div>
@@ -48,21 +93,21 @@
         </div>
 
         <div class="col-md-4">
-            <div class="card h-100 shadow-sm">
-                <div class="card-body text-center">
-                    <h5 class="card-title">Payments</h5>
-                    <p class="card-text">
-                        Track and manage customer payments.
+            <div class="card h-100 border-0 rounded-4 shadow-sm">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <h5 class="card-title mb-0">Payments</h5>
+                        <span class="badge bg-warning-subtle text-warning border border-warning-subtle">Payments</span>
+                    </div>
+                    <p class="card-text text-muted">
+                        Track payment methods, discounts and total vs paid amounts.
                     </p>
-                    <a asp-controller="Payments"
-                       asp-action="Index"
-                       class="btn btn-warning">
+                    <a asp-controller="Payments" asp-action="Index" class="btn btn-outline-warning w-100 text-dark">
                         View Payments
                     </a>
                 </div>
             </div>
         </div>
-
     </div>
 
     <!-- Admin Section -->
@@ -70,20 +115,23 @@
     {
         <hr class="my-5" />
 
-        <h3 class="text-center mb-4">Administration</h3>
+        <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
+            <h3 class="mb-0 fw-bold">Administration</h3>
+            <span class="badge bg-dark-subtle text-dark border">Admin only</span>
+        </div>
 
         <div class="row g-4">
-
             <div class="col-md-6">
-                <div class="card h-100 shadow-sm border-dark">
-                    <div class="card-body text-center">
-                        <h5 class="card-title">Employees</h5>
-                        <p class="card-text">
-                            Manage employee records and permissions.
+                <div class="card h-100 border-0 rounded-4 shadow-sm">
+                    <div class="card-body p-4">
+                        <div class="d-flex align-items-center justify-content-between mb-3">
+                            <h5 class="card-title mb-0">Employees</h5>
+                            <span class="badge bg-dark">Admin</span>
+                        </div>
+                        <p class="card-text text-muted">
+                            Manage employee records, salaries, roles and permissions.
                         </p>
-                        <a asp-controller="Employees"
-                           asp-action="Index"
-                           class="btn btn-dark">
+                        <a asp-controller="Employees" asp-action="Index" class="btn btn-dark w-100">
                             Manage Employees
                         </a>
                     </div>
@@ -91,22 +139,21 @@
             </div>
 
             <div class="col-md-6">
-                <div class="card h-100 shadow-sm border-secondary">
-                    <div class="card-body text-center">
-                        <h5 class="card-title">Licenses</h5>
-                        <p class="card-text">
-                            Manage customer driving licenses.
+                <div class="card h-100 border-0 rounded-4 shadow-sm">
+                    <div class="card-body p-4">
+                        <div class="d-flex align-items-center justify-content-between mb-3">
+                            <h5 class="card-title mb-0">Licenses</h5>
+                            <span class="badge bg-secondary">Admin</span>
+                        </div>
+                        <p class="card-text text-muted">
+                            Manage driving licenses and validity dates for customers.
                         </p>
-                        <a asp-controller="Licenses"
-                           asp-action="Index"
-                           class="btn btn-secondary">
+                        <a asp-controller="Licenses" asp-action="Index" class="btn btn-secondary w-100">
                             Manage Licenses
                         </a>
                     </div>
                 </div>
             </div>
-
         </div>
     }
-
 </div>

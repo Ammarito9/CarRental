@@ -39,20 +39,37 @@ namespace CarRental.Controllers
         [HttpGet]
         public IActionResult Create()
         {
-            return View();
+            // Ensure nested object exists for the form bindings (Person.*)
+            return View(new Employee { Person = new Person() });
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Create(Employee employee)
         {
-            if (ModelState.IsValid)
-            {
-                _context.Employees.Add(employee);
-                _context.SaveChanges();
-                return RedirectToAction(nameof(Index));
-            }
+            if (!ModelState.IsValid)
+                return View(employee);
 
-            return View(employee);
+            // ✅ 1) Create Person first (PersonId generated)
+            var person = new Person();
+            _context.People.Add(person);
+
+            // Copy values from posted Person into tracked Person (no manual mapping)
+            if (employee.Person != null)
+                _context.Entry(person).CurrentValues.SetValues(employee.Person);
+
+            _context.SaveChanges(); // PersonId is now generated
+
+            // ✅ 2) Create Employee with the same PersonId (shared PK)
+            var emp = new Employee();
+            _context.Employees.Add(emp);
+
+            _context.Entry(emp).CurrentValues.SetValues(employee);
+            emp.PersonId = person.PersonId; // important
+            emp.Person = null;              // prevent EF trying to insert Person again
+
+            _context.SaveChanges();
+            return RedirectToAction(nameof(Index));
         }
 
         [HttpGet]
@@ -60,7 +77,9 @@ namespace CarRental.Controllers
         {
             if (id == null) return NotFound();
 
-            var employee = _context.Employees.Find(id);
+            var employee = _context.Employees.Include(e => e.Person)
+                .Include(e => e.Manager)
+                .FirstOrDefault(e => e.PersonId == id);
             if (employee == null) return NotFound();
 
             return View(employee);

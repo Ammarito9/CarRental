@@ -1,13 +1,14 @@
 using System.Linq;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using CarRental.Data;
 using CarRental.Models;
-using Microsoft.AspNetCore.Authorization;
 
 namespace CarRental.Controllers
 {
+    [Authorize] // ✅ protect all actions (remove if you want public browsing)
     public class RentalContractsController : Controller
     {
         private readonly CarRentalDbContext _context;
@@ -20,10 +21,9 @@ namespace CarRental.Controllers
         // GET: RentalContracts
         public IActionResult Index()
         {
-            // Include related entities for display
             var rentals = _context.RentalContracts
-                .Include(r => r.Customer)   // change if your nav property name is different
-                .Include(r => r.Car);       // e.g. .Include(r => r.CarsCatalog)
+                .Include(r => r.Customer)
+                .Include(r => r.Car);
 
             return View(rentals.ToList());
         }
@@ -31,16 +31,14 @@ namespace CarRental.Controllers
         // GET: RentalContracts/Details/5
         public IActionResult Details(int? id)
         {
-            if (id == null)
-                return NotFound();
+            if (id == null) return NotFound();
 
             var rental = _context.RentalContracts
                 .Include(r => r.Customer)
                 .Include(r => r.Car)
-                .FirstOrDefault(r => r.ContractId == id);   // change ContractId if needed
+                .FirstOrDefault(r => r.ContractId == id);
 
-            if (rental == null)
-                return NotFound();
+            if (rental == null) return NotFound();
 
             return View(rental);
         }
@@ -55,7 +53,6 @@ namespace CarRental.Controllers
         // POST: RentalContracts/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize]
         public IActionResult Create(RentalContract rental)
         {
             if (ModelState.IsValid)
@@ -63,14 +60,15 @@ namespace CarRental.Controllers
                 try
                 {
                     _context.RentalContracts.Add(rental);
-                    _context.SaveChanges();      // triggers fire here
+                    _context.SaveChanges(); // DB triggers run here
                     return RedirectToAction(nameof(Index));
                 }
                 catch (DbUpdateException ex)
                 {
-                    // Trigger RAISE EXCEPTION messages come here
-                    ModelState.AddModelError(string.Empty,
-                        ex.InnerException?.Message ?? "An error occurred while creating the rental contract.");
+                    ModelState.AddModelError(
+                        string.Empty,
+                        ex.InnerException?.Message ?? ex.Message
+                    );
                 }
             }
 
@@ -81,12 +79,10 @@ namespace CarRental.Controllers
         // GET: RentalContracts/Edit/5
         public IActionResult Edit(int? id)
         {
-            if (id == null)
-                return NotFound();
+            if (id == null) return NotFound();
 
             var rental = _context.RentalContracts.Find(id);
-            if (rental == null)
-                return NotFound();
+            if (rental == null) return NotFound();
 
             PopulateDropDowns();
             return View(rental);
@@ -97,12 +93,10 @@ namespace CarRental.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Edit(int id, RentalContract rental)
         {
-            if (id != rental.ContractId)   // adjust ContractId if different
-                return NotFound();
+            if (id != rental.ContractId) return NotFound();
 
-            int days = rental.EndingDate.Value.DayNumber
-                - rental.StartingDate.Value.DayNumber;
-
+            // Optional rule (keep or remove)
+            int days = rental.EndingDate.Value.DayNumber - rental.StartingDate.Value.DayNumber;
             if (days > 30 && !User.IsInRole("Admin"))
                 ModelState.AddModelError("", "Rentals longer than 30 days must be created/approved by an Admin.");
 
@@ -111,13 +105,15 @@ namespace CarRental.Controllers
                 try
                 {
                     _context.Update(rental);
-                    _context.SaveChanges();    // BEFORE UPDATE trigger runs here
+                    _context.SaveChanges(); // BEFORE UPDATE trigger runs here
                     return RedirectToAction(nameof(Index));
                 }
                 catch (DbUpdateException ex)
                 {
-                    ModelState.AddModelError(string.Empty,
-                        ex.InnerException?.Message ?? "An error occurred while updating the rental contract.");
+                    ModelState.AddModelError(
+                        string.Empty,
+                        ex.InnerException?.Message ?? ex.Message
+                    );
                 }
             }
 
@@ -128,16 +124,14 @@ namespace CarRental.Controllers
         // GET: RentalContracts/Delete/5
         public IActionResult Delete(int? id)
         {
-            if (id == null)
-                return NotFound();
+            if (id == null) return NotFound();
 
             var rental = _context.RentalContracts
                 .Include(r => r.Customer)
                 .Include(r => r.Car)
                 .FirstOrDefault(r => r.ContractId == id);
 
-            if (rental == null)
-                return NotFound();
+            if (rental == null) return NotFound();
 
             return View(rental);
         }
@@ -157,25 +151,20 @@ namespace CarRental.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // Helper: check existence
-        private bool RentalContractExists(int id)
-        {
-            return _context.RentalContracts.Any(e => e.ContractId == id);
-        }
-
         // Helper: dropdowns for Create/Edit
         private void PopulateDropDowns()
         {
-            // Customers dropdown
+            // RentalContracts.CustomerID -> Customers.PersonID
             ViewBag.CustomerId = new SelectList(_context.Customers, "PersonId", "PersonId");
 
+            // RentalContracts.CarID -> CarsCatalogs.CarID
+            ViewBag.CarId = new SelectList(_context.CarsCatalogs, "CarId", "CarName");
 
-            // Cars dropdown
-            ViewBag.CarId = new SelectList(
-                _context.CarsCatalogs,
-                "CarId",        // or "PlateNumber" if that’s your FK
-                "CarName"       // text shown in dropdown
-            );
+            // RentalContracts.PaymentID is NOT NULL in your DB
+            ViewBag.PaymentId = new SelectList(_context.Payments, "PaymentId", "PaymentId");
+
+            // RentalContracts.ApprovedByID is NOT NULL in your DB
+            ViewBag.ApprovedById = new SelectList(_context.Employees, "PersonId", "PersonId");
         }
     }
 }

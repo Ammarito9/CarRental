@@ -5,31 +5,26 @@
 -- Ensures the car is not rented at the same time
 ------------------------------------------------------------
 
-CREATE OR REPLACE FUNCTION "trg_check_rental_before_insert"()
+CREATE OR REPLACE FUNCTION trg_check_rental_before_insert()
 RETURNS TRIGGER
-AS
-$$
-DECLARE
-    v_available BOOLEAN;
+LANGUAGE plpgsql
+AS $$
 BEGIN
-    -- Check if the car is available for the given dates
-    v_available := "fn_car_available"(NEW."PlateNumber", NEW."StartingDate", NEW."EndingDate");
-
-    IF v_available = FALSE THEN
-        RAISE EXCEPTION 'Car % is not available between % and %',
-            NEW."PlateNumber", NEW."StartingDate", NEW."EndingDate";
+    IF NOT fn_car_available(NEW."CarID", NEW."StartingDate", NEW."EndingDate") THEN
+        RAISE EXCEPTION
+            'CarID % is not available between % and %',
+            NEW."CarID", NEW."StartingDate", NEW."EndingDate";
     END IF;
 
     RETURN NEW;
 END;
-$$
-LANGUAGE "plpgsql";
+$$;
 
-CREATE TRIGGER "check_rental_before_insert"
+DROP TRIGGER IF EXISTS check_rental_before_insert ON "RentalContracts";
+CREATE TRIGGER check_rental_before_insert
 BEFORE INSERT ON "RentalContracts"
 FOR EACH ROW
-EXECUTE PROCEDURE "trg_check_rental_before_insert"();
-
+EXECUTE FUNCTION trg_check_rental_before_insert();
 
 
 ---------------------------------------------------------------------------------------------------------------------------
@@ -39,30 +34,26 @@ EXECUTE PROCEDURE "trg_check_rental_before_insert"();
 -- Ensures changes do not violate rental date availability
 ------------------------------------------------------------
 
-CREATE OR REPLACE FUNCTION "trg_check_rental_before_update"()
+CREATE OR REPLACE FUNCTION trg_check_rental_before_update()
 RETURNS TRIGGER
-AS
-$$
-DECLARE
-    v_available BOOLEAN;
+LANGUAGE plpgsql
+AS $$
 BEGIN
-    -- Re-check car availability when dates are updated
-    v_available := "fn_car_available"(NEW."PlateNumber", NEW."StartingDate", NEW."EndingDate");
-
-    IF v_available = FALSE THEN
-        RAISE EXCEPTION 'Car % is not available for updated dates (% to %)',
-            NEW."PlateNumber", NEW."StartingDate", NEW."EndingDate";
+    IF NOT fn_car_available(NEW."CarID", NEW."StartingDate", NEW."EndingDate") THEN
+        RAISE EXCEPTION
+            'CarID % is not available for updated dates',
+            NEW."CarID";
     END IF;
 
     RETURN NEW;
 END;
-$$
-LANGUAGE "plpgsql";
+$$;
 
-CREATE TRIGGER "check_rental_before_update"
+DROP TRIGGER IF EXISTS check_rental_before_update ON "RentalContracts";
+CREATE TRIGGER check_rental_before_update
 BEFORE UPDATE ON "RentalContracts"
 FOR EACH ROW
-EXECUTE PROCEDURE "trg_check_rental_before_update"();
+EXECUTE FUNCTION trg_check_rental_before_update();
 
 
 ---------------------------------------------------------------------------------------------------------------------------
@@ -72,41 +63,41 @@ EXECUTE PROCEDURE "trg_check_rental_before_update"();
 -- Uses fn_get_car_age to determine maintenance needs
 ------------------------------------------------------------
 
-CREATE OR REPLACE FUNCTION "trg_update_car_after_return"()
+CREATE OR REPLACE FUNCTION trg_update_car_after_return()
 RETURNS TRIGGER
-AS
-$$
+LANGUAGE plpgsql
+AS $$
 DECLARE
-    v_age INT;
+    v_car_id INT;
 BEGIN
-    -- Get car age using function
-    SELECT "fn_get_car_age"(car."ManufactureYear")
-    INTO v_age
-    FROM "CarsCatalogs" car
-    WHERE car."PlateNumber" = NEW."PlateNumber";
+    -- Find the car used in this contract
+    SELECT "CarID"
+    INTO v_car_id
+    FROM "RentalContracts"
+    WHERE "ContractID" = NEW."ContractID";
 
-    -- Update car mileage
-    UPDATE "CarsCatalogs"
-    SET "DistanceKM" = "DistanceKM" + NEW."ConsumedMileage"
-    WHERE "PlateNumber" = NEW."PlateNumber";
-
-    -- Example rule: Cars older than 10 years require maintenance
-    IF v_age >= 10 THEN
-        UPDATE "CarsCatalogs"
-        SET "Status" = 'UnderMaintenance'
-        WHERE "PlateNumber" = NEW."PlateNumber";
+    IF v_car_id IS NULL THEN
+        RAISE EXCEPTION 'No car found for contract %', NEW."ContractID";
     END IF;
+
+    -- Update mileage & set car available again
+    UPDATE "CarsCatalogs"
+    SET
+        "DistanceKM" = "DistanceKM" + NEW."ConsumedMileage",
+        "Status" = 1  -- Available
+    WHERE "CarID" = v_car_id;
 
     RETURN NEW;
 END;
-$$
-LANGUAGE "plpgsql";
+$$;
 
-CREATE TRIGGER "update_car_after_return"
+DROP TRIGGER IF EXISTS update_car_after_return ON "ReturningRecords";
+CREATE TRIGGER update_car_after_return
 AFTER INSERT ON "ReturningRecords"
 FOR EACH ROW
-EXECUTE PROCEDURE "trg_update_car_after_return"();
+EXECUTE FUNCTION trg_update_car_after_return();
 
+COMMIT;
 
 
 ---------------------------------------------------------------------------------------------------------------------------
@@ -135,3 +126,21 @@ EXECUTE PROCEDURE "trg_customer_check_person"();
 
 
 ------------------------------------------------------------
+---------------------------------------------------------=---
+-- =========================
+-- CREATE TRIGGERS
+-- =========================
+CREATE TRIGGER check_rental_before_insert
+BEFORE INSERT ON "RentalContracts"
+FOR EACH ROW
+EXECUTE FUNCTION trg_check_rental_before_insert();
+
+CREATE TRIGGER check_rental_before_update
+BEFORE UPDATE ON "RentalContracts"
+FOR EACH ROW
+EXECUTE FUNCTION trg_check_rental_before_update();
+
+CREATE TRIGGER update_car_after_return
+AFTER INSERT ON "ReturningRecords"
+FOR EACH ROW
+EXECUTE FUNCTION trg_update_car_after_return();

@@ -7,42 +7,58 @@
 <h2>Create Rental Contract</h2>
 
 <form asp-action="Create" method="post">
+    @Html.AntiForgeryToken()
+
+    <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
     <div class="mb-3">
         <label asp-for="CustomerId" class="form-label">Customer</label>
-        <select asp-for="CustomerId" class="form-select" asp-items="ViewBag.CustomerId"></select>
+        <select asp-for="CustomerId" class="form-select" asp-items="ViewBag.CustomerId">
+            <option value="0">-- Select customer --</option>
+        </select>
         <span asp-validation-for="CustomerId" class="text-danger"></span>
     </div>
 
     <div class="mb-3">
         <label asp-for="CarId" class="form-label">Car</label>
-        <select asp-for="CarId" class="form-select" asp-items="ViewBag.CarId"></select>
+        <select asp-for="CarId" class="form-select" asp-items="ViewBag.CarId">
+            <option value="0">-- Select car --</option>
+        </select>
         <span asp-validation-for="CarId" class="text-danger"></span>
     </div>
 
-    <div class="mb-3">
-        <label asp-for="StartingDate" class="form-label"></label>
-        <input asp-for="StartingDate" type="date" class="form-control" />
-        <span asp-validation-for="StartingDate" class="text-danger"></span>
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label asp-for="StartingDate" class="form-label"></label>
+            <input asp-for="StartingDate" type="date" class="form-control" />
+            <span asp-validation-for="StartingDate" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label asp-for="EndingDate" class="form-label"></label>
+            <input asp-for="EndingDate" type="date" class="form-control" />
+            <span asp-validation-for="EndingDate" class="text-danger"></span>
+        </div>
     </div>
 
+    <!-- ✅ Payment is REQUIRED in DB -->
     <div class="mb-3">
-        <label asp-for="EndingDate" class="form-label"></label>
-        <input asp-for="EndingDate" type="date" class="form-control" />
-        <span asp-validation-for="EndingDate" class="text-danger"></span>
-    </div>
-
-    <div class="mb-3">
-        <label asp-for="PaymentId" class="form-label"></label>
-        <input asp-for="PaymentId" class="form-control" />
+        <label asp-for="PaymentId" class="form-label">Payment</label>
+        <select asp-for="PaymentId" class="form-select" asp-items="ViewBag.PaymentId">
+            <option value="0">-- Select payment --</option>
+        </select>
         <span asp-validation-for="PaymentId" class="text-danger"></span>
-        <small class="text-muted">Optional now — you can assign later.</small>
+        <small class="text-muted">Payment is required in the database.</small>
     </div>
 
+    <!-- ✅ ApprovedBy is REQUIRED in DB -->
     <div class="mb-3">
-        <label asp-for="ApprovedById" class="form-label"></label>
-        <input asp-for="ApprovedById" class="form-control" />
+        <label asp-for="ApprovedById" class="form-label">Approved By</label>
+        <select asp-for="ApprovedById" class="form-select" asp-items="ViewBag.ApprovedById">
+            <option value="0">-- Select employee --</option>
+        </select>
         <span asp-validation-for="ApprovedById" class="text-danger"></span>
-        <small class="text-muted">Optional / Admin approval.</small>
+        <small class="text-muted">Approval is required in the database.</small>
     </div>
 
     <button class="btn btn-success" type="submit">Create</button>
