@@ -1,14 +1,12 @@
-@model CarRental.ViewModels.LoginViewModel
+@model CarRental.ViewModels.RegisterViewModel
 
 @{
-    ViewData["Title"] = "Login";
+    ViewData["Title"] = "Register";
 }
 
-<h2>Login</h2>
+<h2>Register</h2>
 
-<form asp-action="Login" method="post">
-    <input type="hidden" name="returnUrl" value="@ViewData["ReturnUrl"]" />
-
+<form asp-action="Register" method="post">
     <div>
         <label asp-for="UserName"></label>
         <input asp-for="UserName" />
@@ -22,11 +20,12 @@
     </div>
 
     <div>
-        <input asp-for="RememberMe" />
-        <label asp-for="RememberMe"></label>
+        <label asp-for="ConfirmPassword"></label>
+        <input asp-for="ConfirmPassword" type="password" />
+        <span asp-validation-for="ConfirmPassword" style="color:red"></span>
     </div>
 
-    <button type="submit">Login</button>
+    <button type="submit">Register</button>
 </form>
 
 @if (!ViewData.ModelState.IsValid)
@@ -40,6 +39,6 @@
 }
 
 <p>
-    Don’t have an account?
-    <a asp-action="Register">Register</a>
+    Already have an account?
+    <a asp-action="Login">Login</a>
 </p>

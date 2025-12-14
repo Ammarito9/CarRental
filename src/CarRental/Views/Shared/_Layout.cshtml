@@ -19,11 +19,15 @@
                 <ul class="navbar-nav me-auto">
 
                     <li class="nav-item">
-                        <a class="nav-link" asp-controller="CarsCatalog" asp-action="Index">Cars Catalog</a>
+                        <a class="nav-link" asp-controller="CarsCatalog" asp-action="Index">
+                            Cars Catalog
+                        </a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" asp-controller="Customers" asp-action="Index">Customers</a>
+                        <a class="nav-link" asp-controller="Customers" asp-action="Index">
+                            Customers
+                        </a>
                     </li>
 
                     <li class="nav-item">
@@ -33,7 +37,9 @@
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" asp-controller="Payments" asp-action="Index">Payments</a>
+                        <a class="nav-link" asp-controller="Payments" asp-action="Index">
+                            Payments
+                        </a>
                     </li>
 
                     @if (User.IsInRole("Admin"))
@@ -47,17 +53,24 @@
                 </ul>
 
                 <ul class="navbar-nav">
-                    @if (User.Identity.IsAuthenticated)
+                    @if (User.Identity != null && User.Identity.IsAuthenticated)
                     {
                         <li class="nav-item">
                             <span class="navbar-text text-white me-3">
                                 Hello, @User.Identity.Name
                             </span>
                         </li>
+
                         <li class="nav-item">
-                            <a class="nav-link" asp-controller="Account" asp-action="Logout">
-                                Logout
-                            </a>
+                            <form asp-controller="Account"
+                                  asp-action="Logout"
+                                  method="post"
+                                  class="d-inline">
+                                <button type="submit"
+                                        class="nav-link btn btn-link text-white p-0 m-0">
+                                    Logout
+                                </button>
+                            </form>
                         </li>
                     }
                     else
@@ -65,6 +78,12 @@
                         <li class="nav-item">
                             <a class="nav-link" asp-controller="Account" asp-action="Login">
                                 Login
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Account" asp-action="Register">
+                                Register
                             </a>
                         </li>
                     }

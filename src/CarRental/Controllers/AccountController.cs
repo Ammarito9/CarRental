@@ -1,13 +1,20 @@
-using System.Security.Claims;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
+using CarRental.ViewModels;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using CarRental.Models;
 
 namespace CarRental.Controllers
 {
     public class AccountController : Controller
     {
+        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly UserManager<IdentityUser> _userManager;
+
+        public AccountController(SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager)
+        {
+            _signInManager = signInManager;
+            _userManager = userManager;
+        }
+
         [HttpGet]
         public IActionResult Login(string? returnUrl = null)
         {
@@ -16,39 +23,27 @@ namespace CarRental.Controllers
         }
 
         [HttpPost]
-        public IActionResult Login(LoginViewModel model, string? returnUrl = null)
+        public async Task<IActionResult> Login(LoginViewModel vm, string? returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl;
 
-            string? role = null;
+            if (!ModelState.IsValid) return View(vm);
 
-            // Hard-coded users for course project
-            if (model.Username == "admin" && model.Password == "Admin123!")
-                role = "Admin";
-            else if (model.Username == "employee" && model.Password == "Emp123!")
-                role = "Employee";
-
-            if (role == null)
+            var user = await _userManager.FindByNameAsync(vm.UserName);
+            if (user == null)
             {
-                ModelState.AddModelError("", "Invalid username or password.");
-                return View(model);
+                ModelState.AddModelError("", "Invalid login attempt.");
+                return View(vm);
             }
 
-            var claims = new List<Claim>
+            var result = await _signInManager.PasswordSignInAsync(
+                user, vm.Password, vm.RememberMe, lockoutOnFailure: false);
+
+            if (!result.Succeeded)
             {
-                new Claim(ClaimTypes.Name, model.Username),
-                new Claim(ClaimTypes.Role, role)
-            };
-
-            var identity = new ClaimsIdentity(
-                claims,
-                CookieAuthenticationDefaults.AuthenticationScheme);
-
-            var principal = new ClaimsPrincipal(identity);
-
-            HttpContext.SignInAsync(
-                CookieAuthenticationDefaults.AuthenticationScheme,
-                principal).GetAwaiter().GetResult();
+                ModelState.AddModelError("", "Invalid login attempt.");
+                return View(vm);
+            }
 
             if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
                 return Redirect(returnUrl);
@@ -56,57 +51,11 @@ namespace CarRental.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        [HttpGet]
-        public IActionResult Register()
-        {
-            return View();
-        }
-
         [HttpPost]
-        public IActionResult Register(RegisterViewModel model)
+        public async Task<IActionResult> Logout()
         {
-            if (!ModelState.IsValid)
-                return View(model);
-
-            if (model.Password != model.ConfirmPassword)
-            {
-                ModelState.AddModelError("", "Passwords do not match.");
-                return View(model);
-            }
-
-            var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.Name, model.Username),
-                new Claim(ClaimTypes.Role, "Employee")
-            };
-
-            var identity = new ClaimsIdentity(
-                claims,
-                CookieAuthenticationDefaults.AuthenticationScheme);
-
-            var principal = new ClaimsPrincipal(identity);
-
-            HttpContext.SignInAsync(
-                CookieAuthenticationDefaults.AuthenticationScheme,
-                principal).GetAwaiter().GetResult();
-
+            await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
-        }
-
-        [HttpPost]
-        public IActionResult Logout()
-        {
-            HttpContext.SignOutAsync(
-                CookieAuthenticationDefaults.AuthenticationScheme
-            ).GetAwaiter().GetResult();
-
-            return RedirectToAction("Index", "Home");
-        }
-
-        [HttpGet]
-        public IActionResult AccessDenied()
-        {
-            return View();
         }
     }
 }
