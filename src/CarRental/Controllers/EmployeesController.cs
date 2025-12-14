@@ -50,23 +50,20 @@ namespace CarRental.Controllers
             if (!ModelState.IsValid)
                 return View(employee);
 
-            // ✅ 1) Create Person first (PersonId generated)
             var person = new Person();
             _context.People.Add(person);
 
-            // Copy values from posted Person into tracked Person (no manual mapping)
             if (employee.Person != null)
                 _context.Entry(person).CurrentValues.SetValues(employee.Person);
 
-            _context.SaveChanges(); // PersonId is now generated
+            _context.SaveChanges();
 
-            // ✅ 2) Create Employee with the same PersonId (shared PK)
             var emp = new Employee();
             _context.Employees.Add(emp);
 
             _context.Entry(emp).CurrentValues.SetValues(employee);
-            emp.PersonId = person.PersonId; // important
-            emp.Person = null;              // prevent EF trying to insert Person again
+            emp.PersonId = person.PersonId; 
+            emp.Person = null;             
 
             _context.SaveChanges();
             return RedirectToAction(nameof(Index));
