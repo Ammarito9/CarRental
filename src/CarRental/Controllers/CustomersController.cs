@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace CarRental.Controllers
 {
-  // [Authorize]
+   [Authorize]
   public class CustomersController : Controller
   {
     private readonly CarRentalDbContext _context;

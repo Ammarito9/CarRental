@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CarRental.Data;
 using CarRental.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CarRental.Controllers
 {
@@ -40,6 +41,7 @@ namespace CarRental.Controllers
             return View(car);
         }
 
+        [Authorize]
         // GET: Cars/Create
         public IActionResult Create()
         {
@@ -60,7 +62,7 @@ namespace CarRental.Controllers
 
             return View(car);
         }
-
+        [Authorize]
         // GET: Cars/Edit/5
         public IActionResult Edit(int? id)
         {
@@ -104,6 +106,8 @@ namespace CarRental.Controllers
         }
 
         // GET: Cars/Delete/5
+        [Authorize]
+
         public IActionResult Delete(int? id)
         {
             if (id == null)
